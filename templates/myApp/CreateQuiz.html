@@ -1,0 +1,113 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}
+Category Page
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <center>
+        <h1>Create Quiz</h1>
+    </center>
+    <center>
+        <h3>Select Category</h3>
+        <script>
+            console.log("in")
+        </script>
+    </center>
+    <div class="categories" id="categories">
+    </div>
+</div>
+<style>
+    .categories {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .category {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 30px;
+        background-color: rgb(207, 207, 207);
+        width: 300px;
+    }
+
+    .category:checked {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 30px;
+        background-color: rgb(156, 95, 95);
+        width: 400px;
+    }
+
+    .takeUsername {
+        display: block;
+        position: relative;
+    }
+</style>
+<script type="text/javascript">
+    var received_data = "{{data}}";
+    console.log(received_data);
+    let data = JSON.parse(received_data.replace(/&quot;/g, '"'));
+    console.log(data);
+    data.categories.forEach(element => {
+        console.log(element.category)
+        document.getElementById("categories").innerHTML += "<label class='category' for='" + element.id + "'>" + element.category + "<input type='radio' name='category' value='" + element.id + "' id='" + element.id + "'></label>"
+    })
+    document.getElementById("categories").innerHTML += "<div class='takeusername'><label for='username'><h3>Enter Your </h3><input type='text' name='name' id='username'></label></div>"
+    document.getElementById("categories").innerHTML += "<button class='submit' id='submit'>Submit</button>"
+
+    document.getElementById("submit").addEventListener("click", function () {
+        postCategories();
+    });
+
+    async function postCategories() {
+        let DATA = {
+            'name': $("#username").val(),
+            'cat_id': $('div input[type=radio]:checked').val()
+        }
+        await fetch(``, {
+            method: "POST",
+            body: { data: DATA },
+        }).then(() => console.log(DATA));
+
+        $.ajax({
+            url: "", // the endpoint
+            type: "POST", // http method
+            data: { data: DATA }, // data sent with the post request
+
+            // handle a successful response
+            success: function (json) {
+                // $('#post-text').val(''); // remove the value from the input
+                console.log(json); // log the returned json to the console
+                console.log("success"); // another sanity check
+            },
+
+            // handle a non-successful response
+            // error : function(xhr,errmsg,err) {
+            //     $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+            //         " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            //     console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            // }
+        });
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", '', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(DATA));
+    }
+</script>
+
+
+{% endblock content %}
+
+{% block connectjs %}
+<!-- <script type="text/javascript" src="{% static 'js/Category.js' %}"></script> -->
+{% endblock connectjs %}

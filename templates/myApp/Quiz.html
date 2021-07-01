@@ -1,0 +1,16 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}
+    Quiz Page
+{% endblock title %}
+
+{% block content %}
+    <h1>This is Quiz page</h1>
+    <input type="text" name="name" v-model="name">
+    <!-- render quiz -->
+{% endblock content %}
+
+{% block linkjs %}
+    <script type="text/javascript" src="{% static 'js/Category.js' %}"></script>
+{% endblock linkjs %}
