@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 def create_quiz(request):
     print("inside")
     result = {'message' : 'something went wrong' , 'status' : False}
@@ -19,7 +19,7 @@ def create_quiz(request):
         })
     try:
         data = request.data
-        print(data)
+        print("data")
         name = data.get('name')
         category = data.get('cat_id')
 

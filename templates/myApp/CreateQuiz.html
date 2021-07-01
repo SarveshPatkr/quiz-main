@@ -16,8 +16,8 @@ Category Page
             console.log("in")
         </script>
     </center>
-    <div class="categories" id="categories">
-    </div>
+    <form class="categories" id="categories">
+    </form>
 </div>
 <style>
     .categories {
@@ -63,7 +63,7 @@ Category Page
         document.getElementById("categories").innerHTML += "<label class='category' for='" + element.id + "'>" + element.category + "<input type='radio' name='category' value='" + element.id + "' id='" + element.id + "'></label>"
     })
     document.getElementById("categories").innerHTML += "<div class='takeusername'><label for='username'><h3>Enter Your </h3><input type='text' name='name' id='username'></label></div>"
-    document.getElementById("categories").innerHTML += "<button class='submit' id='submit'>Submit</button>"
+    document.getElementById("categories").innerHTML += "<button class='submit' type='submit' id='submit'>Submit</button>"
 
     document.getElementById("submit").addEventListener("click", function () {
         postCategories();
@@ -72,13 +72,14 @@ Category Page
     async function postCategories() {
         let DATA = {
             'name': $("#username").val(),
-            'cat_id': $('div input[type=radio]:checked').val()
+            'cat_id': $('form input[type=radio]:checked').val()
         }
+        
         await fetch(``, {
-            method: "POST",
-            body: { data: DATA },
+            method: "GET",
+            body: { data: DATA }
         }).then(() => console.log(DATA));
-
+        
         $.ajax({
             url: "", // the endpoint
             type: "POST", // http method
