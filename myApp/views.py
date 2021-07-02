@@ -1,11 +1,12 @@
 import json
 from django.shortcuts import render
+from django.views.generic.base import RedirectView
 from .models import*
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def create_quiz(request):
     print("inside")
     result = {'message' : 'something went wrong' , 'status' : False}
@@ -19,7 +20,7 @@ def create_quiz(request):
         })
     try:
         data = request.data
-        print("data")
+        print(data)
         name = data.get('name')
         category = data.get('cat_id')
 
@@ -34,7 +35,7 @@ def create_quiz(request):
             result['message'] = 'invalid category id'
             raise Exception('invalid category id')
 
-        create_quiz = CreateQuizModel.objects.create(user=user,category=category_obj)
+        create_quiz,_ = CreateQuizModel.objects.get_or_create(user=user,category=category_obj)
 
         result['message'] = 'Your quiz is created'
         result['data'] = {'quiz_id' : create_quiz.id , 'category' : category_obj.category }
@@ -43,11 +44,11 @@ def create_quiz(request):
     except Exception as e:
         print(e)
 
-    return JsonResponse({'status' : 200 , 'result':result, 'categories' : categories_list} , safe = False)
+    return JsonResponse({'result':result} , status=  200, safe = False)
 
 
 @api_view(['GET'])
-def  create_quiz(request):
+def  home(request):
     data = {
         "categories": [
             {
@@ -63,9 +64,9 @@ def  create_quiz(request):
     js_data = json.dumps(data)
     return render(request, 'myApp/CreateQuiz.html', {"data": js_data} ,status=  200)
 
-
-
-
+@api_view(['GET'])
+def set_quiz(request,quiz_id):
+    return JsonResponse()
 
 
 @api_view(['POST'])
@@ -112,6 +113,7 @@ def set_quiz(request, quiz_id):
         print(e)
 
     return JsonResponse({'status' : 200 , 'questions' : questionsanswers, 'result':result} , safe = False)
+
 
 def share_quiz(request,quiz_id):
     return render(request, 'myApp/ShareQuiz.html', {"quiz_id":quiz_id})

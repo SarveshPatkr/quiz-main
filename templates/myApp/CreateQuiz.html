@@ -16,7 +16,9 @@ Category Page
             console.log("in")
         </script>
     </center>
-    <form class="categories" id="categories">
+    <form class="categories" id="categories" method="POST" action="create-quiz/">
+        {% csrf_token %}
+
     </form>
 </div>
 <style>
@@ -60,49 +62,25 @@ Category Page
     console.log(data);
     data.categories.forEach(element => {
         console.log(element.category)
-        document.getElementById("categories").innerHTML += "<label class='category' for='" + element.id + "'>" + element.category + "<input type='radio' name='category' value='" + element.id + "' id='" + element.id + "'></label>"
+        document.getElementById("categories").innerHTML += "<label class='category' for='" + element.id + "'>" + element.category + "<input type='radio' name='cat_id' value='" + element.id + "' id='" + element.id + "'></label>"
     })
     document.getElementById("categories").innerHTML += "<div class='takeusername'><label for='username'><h3>Enter Your </h3><input type='text' name='name' id='username'></label></div>"
     document.getElementById("categories").innerHTML += "<button class='submit' type='submit' id='submit'>Submit</button>"
 
-    document.getElementById("submit").addEventListener("click", function () {
-        postCategories();
-    });
+    // document.getElementById("submit").addEventListener("click", function () {
+    //     postCategories();
+    // });
 
     async function postCategories() {
         let DATA = {
             'name': $("#username").val(),
             'cat_id': $('form input[type=radio]:checked').val()
         }
-        
         await fetch(``, {
-            method: "GET",
+            method: "POST",
+            head: { type: "json" },
             body: { data: DATA }
         }).then(() => console.log(DATA));
-        
-        $.ajax({
-            url: "", // the endpoint
-            type: "POST", // http method
-            data: { data: DATA }, // data sent with the post request
-
-            // handle a successful response
-            success: function (json) {
-                // $('#post-text').val(''); // remove the value from the input
-                console.log(json); // log the returned json to the console
-                console.log("success"); // another sanity check
-            },
-
-            // handle a non-successful response
-            // error : function(xhr,errmsg,err) {
-            //     $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-            //         " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-            //     console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-            // }
-        });
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", '', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(DATA));
     }
 </script>
 
