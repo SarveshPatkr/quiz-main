@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic.base import RedirectView
 from .models import*
 from django.http import JsonResponse
@@ -44,7 +44,12 @@ def create_quiz(request):
     except Exception as e:
         print(e)
 
-    return JsonResponse({'result':result} , status=  200, safe = False)
+    # return JsonResponse({'result':result} , status=  200, safe = False)
+    a = result['data'].get('quiz_id')
+    print(a)
+    a = str(a)
+    red = "/set-quiz/" + a
+    return redirect(red)
 
 
 @api_view(['GET'])
@@ -66,7 +71,7 @@ def  home(request):
 
 @api_view(['GET'])
 def set_quiz(request,quiz_id):
-    return JsonResponse()
+    return render(request, quiz_id,'myApp/CreateQuiz.html')
 
 
 @api_view(['POST'])
